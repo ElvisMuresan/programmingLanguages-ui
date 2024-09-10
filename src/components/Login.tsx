@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
+import { useState } from "react"; // Pentru gestionarea erorilor sau stării de autentificare
+import { loginUser } from "./api/languages-api"; // Importă funcția de login
 
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -19,6 +20,7 @@ const loginSchema = z.object({
 });
 
 export function Login() {
+  const [error, setError] = useState<string | null>(null); // Starea pentru erori de login
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -28,9 +30,23 @@ export function Login() {
   });
 
   // Functia care se apeleaza la submit-ul formularului
-  const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    console.log("Login values: ", values);
-    // Aici poți adăuga logica de autentificare (de exemplu, apel la un API)
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    try {
+      // Apelează funcția loginUser din API
+      const response = await loginUser(values.username, values.password);
+
+      // Dacă login-ul reușește, stochează token-ul JWT
+      localStorage.setItem("token", response.user.token);
+
+      // Șterge mesajul de eroare, dacă există
+      setError(null);
+
+      // Poți face o redirecționare sau altă acțiune aici după login
+      console.log("Login successful!", response);
+    } catch (error) {
+      // Dacă apare o eroare, afișează mesajul de eroare
+      setError("Invalid credentials. Please try again.");
+    }
   };
 
   return (
@@ -62,12 +78,17 @@ export function Login() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Enter your password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Enter your password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {error && <p className="text-red-500">{error}</p>} {/* Mesaj de eroare */}
               <Button type="submit" className="w-full">
                 Login
               </Button>
