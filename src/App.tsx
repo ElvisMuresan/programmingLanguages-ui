@@ -7,9 +7,9 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Router>
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col ">
           {/* Adaugă un header în care poți pune comutatorul de temă */}
-          <header className="p-4 bg-gray-100 dark:bg-gray-800">
+          <header className="p-4 bg-gray-100 dark:bg-card">
             <div className="container mx-auto flex justify-end">
               {/* Aici este componenta ModeToggle */}
               <ModeToggle />
