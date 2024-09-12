@@ -1,7 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Login } from "./components/Login"; // Importă componenta Login
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Login } from "./components/Login";
+import PrivateRoute from "./components/PrivateRoute";
 import { ThemeProvider } from "@/components/theme-provider"; // Importă ThemeProvider
 import { ModeToggle } from "./components/mode-toggle"; // Importă ModeToggle
+import { HomePage } from "./components/HomePage";
 
 function App() {
   return (
@@ -19,8 +21,17 @@ function App() {
           {/* Conținutul principal al aplicației */}
           <main className="flex-1">
             <Routes>
-              <Route path="/" element={<Login />} /> {/* Definim ruta pentru Login */}
-              {/* Poți adăuga și alte rute aici */}
+              <Route path="/login" element={<Login />} /> 
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <HomePage />
+                  </PrivateRoute>
+                }
+              /> 
+              <Route path="*" element={<Navigate to="/login" />} />
+           
             </Routes>
           </main>
         </div>

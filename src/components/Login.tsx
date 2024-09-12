@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
+import { useNavigate } from "react-router-dom";
 
 // Schema de validare cu zod
 const loginSchema = z.object({
@@ -21,6 +22,7 @@ const loginSchema = z.object({
 
 export function Login() {
   const [error, setError] = useState<string | null>(null); 
+  const navigate = useNavigate()
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -39,6 +41,7 @@ export function Login() {
 
         setError(null);  
         console.log("Login successful!", response);
+        navigate("/")
       } else {
         console.log('Full response', response)
         setError("Login failed. Invalid response from server.");
