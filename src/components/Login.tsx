@@ -20,7 +20,7 @@ const loginSchema = z.object({
 });
 
 export function Login() {
-  const [error, setError] = useState<string | null>(null); // Starea pentru erori de login
+  const [error, setError] = useState<string | null>(null); 
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -29,25 +29,26 @@ export function Login() {
     },
   });
 
-  // Functia care se apeleaza la submit-ul formularului
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
-      // Apelează funcția loginUser din API
       const response = await loginUser(values.username, values.password);
+  
+      if (response && response.token) {
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("username", response.username); 
 
-      // Dacă login-ul reușește, stochează token-ul JWT
-      localStorage.setItem("token", response.user.token);
-
-      // Șterge mesajul de eroare, dacă există
-      setError(null);
-
-      // Poți face o redirecționare sau altă acțiune aici după login
-      console.log("Login successful!", response);
+        setError(null);  
+        console.log("Login successful!", response);
+      } else {
+        console.log('Full response', response)
+        setError("Login failed. Invalid response from server.");
+      }
     } catch (error) {
-      // Dacă apare o eroare, afișează mesajul de eroare
-      setError("Invalid credentials. Please try again.");
+      setError("Username or password invalid. Please try again.");
+      console.error("Login error: ", error);
     }
   };
+  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-card">
