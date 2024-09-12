@@ -20,7 +20,7 @@ export const logoutUser = async (token: string) => {
       },
     {
         headers: {
-            Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
     });
       return response.data;
