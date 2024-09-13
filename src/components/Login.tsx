@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect, useState } from "react"; // Pentru gestionarea erorilor sau stării de autentificare
-import { loginUser } from "./api/languages-api"; // Importă funcția de login
+import { useEffect, useState } from "react";
+import { loginUser } from "./api/languages-api";
 
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -17,7 +17,6 @@ import {
 } from "./ui/form";
 import { useNavigate } from "react-router-dom";
 
-// Schema de validare cu zod
 const loginSchema = z.object({
 	username: z.string().min(2, {
 		message: "Username must be at least 2 characters.",
@@ -41,7 +40,7 @@ export function Login() {
 	useEffect(() => {
 		const token = localStorage.getItem("token");
 		if (token) {
-			navigate("/programming-languages"); // Redirecționează la HomePage sau orice pagină protejată
+			navigate("/programming-languages");
 		}
 	}, [navigate]);
 
@@ -106,7 +105,6 @@ export function Login() {
 								)}
 							/>
 							{error && <p className="text-red-500">{error}</p>}{" "}
-							{/* Mesaj de eroare */}
 							<Button type="submit" className="w-full">
 								Login
 							</Button>

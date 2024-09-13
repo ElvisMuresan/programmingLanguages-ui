@@ -29,11 +29,11 @@ export const logoutUser = async (token: string) => {
     }
   };
 
-  export const fetchCars = async (token: string, searchTerm?: string) => {
+  export const fetchLanguages = async (token: string, searchTerm?: string) => {
     try {
-        const response = await axios.get(`${BASE_URL}/cars`, {
+        const response = await axios.get(`${BASE_URL}/programming-languages`, {
             headers: {
-                Authorization: token,
+                Authorization: `Bearer ${token}`,
             },
             params: searchTerm ? {search_keyword: searchTerm } : {}
         });
