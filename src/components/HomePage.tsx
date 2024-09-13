@@ -65,6 +65,10 @@ export const HomePage: React.FC = () => {
 		setToken(null);
 	};
 
+	const handleRowClick = (id: number) => {
+		navigate(`/programming-languages/${id}`);
+	};
+
 	return (
 		<div className="container mx-auto p-4">
 			<h1 className="text-2xl">Programming Languages List</h1>
@@ -85,7 +89,11 @@ export const HomePage: React.FC = () => {
 					</TableHeader>
 					<TableBody>
 						{languages.map((language) => (
-							<TableRow key={language.id}>
+							<TableRow
+								key={language.id}
+								onClick={() => handleRowClick(language.id)}
+								className="cursor-pointer hover:bg-slate-200"
+							>
 								<TableCell className="font-medium">{language.id}</TableCell>
 								<TableCell>{language.name}</TableCell>
 								<TableCell>{language.creator}</TableCell>

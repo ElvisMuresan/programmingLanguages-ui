@@ -39,20 +39,20 @@ export const logoutUser = async (token: string) => {
         });
         return response.data
     } catch(error) {
-        throw new Error('Failed to fetch cars')
+        throw new Error('Failed to fetch programming-languages')
     }
   }
 
-  export const fetchCarById = async (id: number, token: string) => {
+  export const fetchLanguageById = async (id: number, token: string) => {
     try {
-      const response = await axios.get(`${BASE_URL}/cars/${id}`, {
+      const response = await axios.get(`${BASE_URL}/programming-languages/${id}`, {
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
       });
       return response.data;
     } catch (error) {
-      throw new Error('Failed to fetch car details');
+      throw new Error('Failed to fetch car programming-languages');
     }
   };
 

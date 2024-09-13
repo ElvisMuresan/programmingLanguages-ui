@@ -9,6 +9,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "./components/mode-toggle";
 import { HomePage } from "./components/HomePage";
+import ProgrammingLanguageDetails from "./components/ProgLanguageDetails";
 
 function App() {
 	return (
@@ -29,6 +30,14 @@ function App() {
 								element={
 									<PrivateRoute>
 										<HomePage />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path="/programming-languages/:id"
+								element={
+									<PrivateRoute>
+										<ProgrammingLanguageDetails />
 									</PrivateRoute>
 								}
 							/>
