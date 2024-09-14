@@ -29,13 +29,12 @@ export const logoutUser = async (token: string) => {
     }
   };
 
-  export const fetchLanguages = async (token: string, searchTerm?: string) => {
+  export const fetchLanguages = async (token: string) => {
     try {
         const response = await axios.get(`${BASE_URL}/programming-languages`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-            params: searchTerm ? {search_keyword: searchTerm } : {}
         });
         return response.data
     } catch(error) {
@@ -55,6 +54,26 @@ export const logoutUser = async (token: string) => {
       throw new Error('Failed to fetch car programming-languages');
     }
   };
+
+  export const searchLanguages = async (token: string, searchTerm: string) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/programming-languages/search-sort`,
+        {
+          search_keyword: searchTerm, // Trimitem cuvântul de căutare
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error('Failed to search programming languages');
+    }
+  };
+  
 
   export const updateCarById = async (
     id: number,
