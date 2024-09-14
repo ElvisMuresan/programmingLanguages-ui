@@ -55,12 +55,14 @@ export const logoutUser = async (token: string) => {
     }
   };
 
-  export const searchLanguages = async (token: string, searchTerm: string) => {
+  export const searchLanguages = async (token: string, searchTerm: string,  sortBy?: string, sortOrder?: string) => {
     try {
       const response = await axios.post(
         `${BASE_URL}/programming-languages/search-sort`,
         {
-          search_keyword: searchTerm, // Trimitem cuvântul de căutare
+          search_keyword: searchTerm, 
+          sortBy,      
+          sortOrder,   
         },
         {
           headers: {
