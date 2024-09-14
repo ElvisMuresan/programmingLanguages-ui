@@ -70,6 +70,9 @@ export const logoutUser = async (token: string) => {
       );
       return response.data;
     } catch (error) {
+      if (error.response && error.response.status === 404) {
+        return [];
+      }
       throw new Error('Failed to search programming languages');
     }
   };

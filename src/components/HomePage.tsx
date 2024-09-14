@@ -28,7 +28,7 @@ export const HomePage: React.FC = () => {
 	const navigate = useNavigate();
 	const [languages, setLanguages] = useState<ProgrammingLanguage[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-	const [error, setError] = useState<string | null>(null);
+	const [error, setError] = useState<string | null>(null); // Pentru mesajul de eroare
 	const [searchTerm, setSearchTerm] = useState<string>("");
 
 	useEffect(() => {
@@ -43,6 +43,7 @@ export const HomePage: React.FC = () => {
 			if (token) {
 				const fetchedLanguages = await fetchLanguages(token);
 				setLanguages(fetchedLanguages);
+				setError(null); // Resetăm eroarea dacă încărcarea este reușită
 			}
 			setLoading(false);
 		} catch (err) {
@@ -52,7 +53,7 @@ export const HomePage: React.FC = () => {
 	};
 
 	useEffect(() => {
-		loadAllLanguages(); // Load all languages on initial render
+		loadAllLanguages(); // Încărcăm toate limbajele la inițializare
 	}, [token]);
 
 	useEffect(() => {
@@ -60,7 +61,13 @@ export const HomePage: React.FC = () => {
 			try {
 				if (token && searchTerm) {
 					const fetchedLanguages = await searchLanguages(token, searchTerm);
-					setLanguages(fetchedLanguages); // Update the table with search results
+					if (fetchedLanguages.length === 0) {
+						setError(`No results found for "${searchTerm}"`); // Setăm eroarea dacă nu sunt rezultate
+						setLanguages([]); // Golește lista dacă nu sunt limbaje găsite
+					} else {
+						setLanguages(fetchedLanguages); // Actualizăm tabelul cu rezultatele căutării
+						setError(null); // Resetăm eroarea dacă sunt rezultate
+					}
 				}
 			} catch (err) {
 				setError("Failed to search programming languages");
@@ -70,7 +77,7 @@ export const HomePage: React.FC = () => {
 		if (searchTerm) {
 			searchForLanguages();
 		} else {
-			loadAllLanguages(); // Reload all languages if search term is cleared
+			loadAllLanguages(); // Reîncărcăm toate limbajele dacă se șterge termenul de căutare
 		}
 	}, [token, searchTerm]);
 
@@ -78,33 +85,41 @@ export const HomePage: React.FC = () => {
 		return <p>Loading programming languages...</p>;
 	}
 
-	if (error) {
-		return <p>{error}</p>;
+	// Afișăm mesajul de eroare dacă nu există rezultate și lista e goală
+	if (error && languages.length === 0) {
+		return (
+			<div className="container mx-auto p-4">
+				<h1 className="text-2xl">Programming Languages List</h1>
+				{token ? (
+					<Logout token={token} clearToken={() => setToken(null)} />
+				) : null}
+				<div className="my-4">
+					<Input
+						type="text"
+						placeholder="Search for a programming language..."
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)} // Păstrăm termenul în câmpul de căutare
+						className="w-full p-2 border rounded"
+					/>
+				</div>
+				<p>{error}</p> {/* Afișăm mesajul de eroare */}
+			</div>
+		);
 	}
-
-	const clearToken = () => {
-		setToken(null);
-	};
-
-	const handleRowClick = (id: number) => {
-		navigate(`/programming-languages/${id}`);
-	};
-
-	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setSearchTerm(e.target.value); // Update search term when typing
-	};
 
 	return (
 		<div className="container mx-auto p-4">
 			<h1 className="text-2xl">Programming Languages List</h1>
-			{token ? <Logout token={token} clearToken={clearToken} /> : null}
+			{token ? (
+				<Logout token={token} clearToken={() => setToken(null)} />
+			) : null}
 
 			<div className="my-4">
 				<Input
 					type="text"
 					placeholder="Search for a programming language..."
 					value={searchTerm}
-					onChange={handleSearchChange}
+					onChange={(e) => setSearchTerm(e.target.value)} // Actualizăm termenul de căutare
 					className="w-full p-2 border rounded"
 				/>
 			</div>
@@ -126,7 +141,9 @@ export const HomePage: React.FC = () => {
 						{languages.map((language) => (
 							<TableRow
 								key={language.id}
-								onClick={() => handleRowClick(language.id)}
+								onClick={() =>
+									navigate(`/programming-languages/${language.id}`)
+								}
 								className="cursor-pointer hover:bg-slate-200"
 							>
 								<TableCell className="font-medium">{language.id}</TableCell>
@@ -142,7 +159,7 @@ export const HomePage: React.FC = () => {
 					</TableBody>
 				</Table>
 			) : (
-				<p>No results found for "{searchTerm}"</p> // Display message if no results
+				<p>No results found for "{searchTerm}"</p> // Afișăm mesajul de eroare în locul tabelului
 			)}
 
 			<Button onClick={() => window.location.reload()} className="mt-6">
