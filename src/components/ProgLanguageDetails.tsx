@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchLanguageById } from "./api/languages-api";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 interface ProgrammingLanguage {
 	id: number;
@@ -48,24 +49,32 @@ const ProgrammingLanguageDetails: React.FC = () => {
 	}
 
 	return (
-		<div className="container mx-auto p-4">
-			<h1 className="text-2xl mb-6">Programming Language Details</h1>
-			<p>
-				<strong>Name:</strong> {language.name}
-			</p>
-			<p>
-				<strong>Creator:</strong> {language.creator}
-			</p>
-			<p>
-				<strong>Release Year:</strong> {language.releaseYear}
-			</p>
-			<p>
-				<strong>Paradigm:</strong> {language.paradigm}
-			</p>
-			<p>
-				<strong>Popularity:</strong> {language.popularity}%
-			</p>
+		<div className="flex justify-center items-center h-screen">
+			<Card>
+				<CardHeader>
+					<CardTitle className="text-center">Programming Language Details</CardTitle>
+				</CardHeader>
+				<CardContent className="space-y-4 text-center">
+					<p>
+					<strong>Name:</strong> {language.name}
+					</p>
+					<p>
+					<strong>Creator:</strong> {language.creator}
+					</p>
+					<p>
+					<strong>Release Year:</strong> {language.releaseYear}
+					</p>
+					<p>
+					<strong>Paradigm:</strong> {language.paradigm}
+					</p>
+					<p>
+					<strong>Popularity:</strong> {language.popularity}%
+					</p>
+				</CardContent>
+			</Card>
 		</div>
+
+
 	);
 };
 
