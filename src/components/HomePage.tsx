@@ -185,30 +185,30 @@ export const HomePage: React.FC = () => {
 	return (
 		<div className="container mx-auto p-4">
 			{token ? (
-				<div className="absolute top-4 right-[250px]">
+				<div className="absolute top-4">
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-							<Button variant="outline" className="ml-4">
-								Account
-							</Button>
+						<Button className="ml-4">
+							Account
+						</Button>
 						</DropdownMenuTrigger>
-						<DropdownMenuContent>
-							<DropdownMenuItem className="pointer-events-none">
-								<span className="font-bold">{user.fullName}</span>
-							</DropdownMenuItem>
-							<DropdownMenuItem className="pointer-events-none">
-								<span>{user.email}</span>
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<Logout token={token} clearToken={() => setToken(null)} />
-							</DropdownMenuItem>
+						<DropdownMenuContent align="start"> 
+						<DropdownMenuItem className="pointer-events-none">
+							<span className="font-bold">{user.fullName}</span>
+						</DropdownMenuItem>
+						<DropdownMenuItem className="pointer-events-none">
+							<span>{user.email}</span>
+						</DropdownMenuItem>
+						<DropdownMenuItem>
+							<Logout token={token} clearToken={() => setToken(null)} />
+						</DropdownMenuItem>
 						</DropdownMenuContent>
-					</DropdownMenu>			
+					</DropdownMenu>
 				</div>
+				  
 ) : null}
 				
-
-			<div className="flex justify-between items-center mb-4">
+			<div className="flex justify-between items-center mb-4 ">
 				<Input
 					type="text"
 					placeholder="Search for a programming language..."
@@ -253,13 +253,13 @@ export const HomePage: React.FC = () => {
 								{sortBy === "paradigm" && (sortOrder === "asc" ? "↑" : "↓")}
 							</TableHead>
 							<TableHead
-								className="text-right"
+								
 								onClick={() => handleSort("popularity")}
 							>
 								Popularity (%){" "}
 								{sortBy === "popularity" && (sortOrder === "asc" ? "↑" : "↓")}
 							</TableHead>
-							<TableHead>Actions</TableHead>
+							<TableHead className="text-right">Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -282,14 +282,12 @@ export const HomePage: React.FC = () => {
 								<TableCell>{language.creator}</TableCell>
 								<TableCell>{language.releaseYear}</TableCell>
 								<TableCell>{language.paradigm}</TableCell>
-								<TableCell className="text-right">
+								<TableCell >
 									{language.popularity}
 								</TableCell>
-								<TableCell onClick={(e) => e.stopPropagation()}>
+								<TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
 									<Button
 										onClick={() => handleEdit(language.id)}
-										variant="outline"
-										className="text-blue-600"
 									>
 										Edit
 									</Button>
@@ -334,7 +332,6 @@ export const HomePage: React.FC = () => {
 				</DialogContent>
 			</Dialog>
 
-			{/* Bulk Delete Confirmation Dialog */}
 			<Dialog
 				open={bulkDeleteConfirmation}
 				onOpenChange={() => setBulkDeleteConfirmation(false)}
@@ -360,9 +357,6 @@ export const HomePage: React.FC = () => {
 				</DialogContent>
 			</Dialog>
 
-			<Button onClick={() => window.location.reload()} className="mt-6">
-				Reload Languages
-			</Button>
 		</div>
 	);
 };

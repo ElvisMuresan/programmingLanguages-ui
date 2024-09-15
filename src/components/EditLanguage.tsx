@@ -114,7 +114,7 @@ export const EditLanguagePage: React.FC = () => {
 				</div>
 				<Button
 					type="submit"
-					className="w-full p-2 bg-blue-500 text-white rounded"
+					className="w-full p-2"
 				>
 					Save Changes
 				</Button>

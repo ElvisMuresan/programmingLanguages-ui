@@ -18,7 +18,7 @@ function App() {
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
 			<Router>
 				<div className="min-h-screen flex flex-col ">
-					<header className="p-4 bg-gray-100 dark:bg-card">
+					<header className="p-4">
 						<div className="container mx-auto flex justify-end">
 							<ModeToggle />
 						</div>
