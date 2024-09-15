@@ -107,6 +107,10 @@ export const HomePage: React.FC = () => {
 		setTriggerSearch(true); // Permitem declanșarea POST pentru search
 	};
 
+	const handleAddNewLanguage = () => {
+		navigate("/add-new-language"); // Navighează către pagina de adăugare a limbajului
+	};
+
 	if (loading) {
 		return <p>Loading programming languages...</p>;
 	}
@@ -139,14 +143,17 @@ export const HomePage: React.FC = () => {
 				<Logout token={token} clearToken={() => setToken(null)} />
 			) : null}
 
-			<div className="my-4">
+			<div className="flex justify-between items-center mb-4">
 				<Input
 					type="text"
 					placeholder="Search for a programming language..."
 					value={searchTerm}
-					onChange={handleSearchChange} // Actualizăm termenul de căutare
+					onChange={handleSearchChange}
 					className="w-full p-2 border rounded"
 				/>
+				<Button onClick={handleAddNewLanguage} className="ml-4">
+					Add New Language
+				</Button>
 			</div>
 
 			{languages.length > 0 ? (

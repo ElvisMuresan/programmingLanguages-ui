@@ -10,6 +10,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "./components/mode-toggle";
 import { HomePage } from "./components/HomePage";
 import ProgrammingLanguageDetails from "./components/ProgLanguageDetails";
+import { AddNewLanguagePage } from "./components/AddLanguage";
 
 function App() {
 	return (
@@ -38,6 +39,15 @@ function App() {
 								element={
 									<PrivateRoute>
 										<ProgrammingLanguageDetails />
+									</PrivateRoute>
+								}
+							/>
+
+							<Route
+								path="/add-new-language"
+								element={
+									<PrivateRoute>
+										<AddNewLanguagePage />
 									</PrivateRoute>
 								}
 							/>

@@ -79,6 +79,24 @@ export const logoutUser = async (token: string) => {
     }
   };
   
+  export const addNewLanguage = async (newLanguage: any) => {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await axios.post(
+            `${BASE_URL}/programming-languages`,
+            newLanguage,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        throw new Error("Failed to add new programming language");
+    }
+};
+
 
   export const updateCarById = async (
     id: number,
@@ -122,15 +140,4 @@ export const logoutUser = async (token: string) => {
   };
 
 
-  export const AddNewCar = async(car: {brand: string; model:string; color:string; engine: string; horsePower: number}, token: string) => {
-    try {
-      await axios.post(`${BASE_URL}/cars`, car, {
-        headers: {
-          Authorization: token,
-        },
-      });
-    } catch (error) {
-      throw new Error('Failed to add a car')
-    }
-
-  }
+  
