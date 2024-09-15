@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logout from "./Logout";
 import { Button } from "./ui/button";
-import { deleteLanguage, fetchLanguages, searchLanguages } from "./api/languages-api";
+import { deleteAllLanguages, deleteLanguage, fetchLanguages, searchLanguages } from "./api/languages-api";
 import {
 	Table,
 	TableBody,
@@ -14,6 +14,7 @@ import {
 } from "./ui/table";
 import { Input } from "./ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Checkbox } from "./ui/checkbox";
 
 interface ProgrammingLanguage {
 	id: number;
@@ -31,10 +32,13 @@ export const HomePage: React.FC = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 	const [searchTerm, setSearchTerm] = useState<string>("");
-	const [sortBy, setSortBy] = useState<string>(""); // Coloana de sortare
-	const [sortOrder, setSortOrder] = useState<string>("asc"); // Ordinea de sortare: asc / desc
+	const [sortBy, setSortBy] = useState<string>(""); 
+	const [sortOrder, setSortOrder] = useState<string>("asc"); 
 	const [triggerSearch, setTriggerSearch] = useState<boolean>(false); 
-	const [languageToDelete, setLanguageToDelete] = useState<ProgrammingLanguage | null>(null); // State for selected language to delete
+	const [languageToDelete, setLanguageToDelete] = useState<ProgrammingLanguage | null>(null); 
+	const [selectedLanguages, setSelectedLanguages] = useState<number[]>([]); 
+	const [selectAll, setSelectAll] = useState<boolean>(false); 
+	const [bulkDeleteConfirmation, setBulkDeleteConfirmation] = useState<boolean>(false); // For bulk delete
 
 	useEffect(() => {
 		const savedToken = localStorage.getItem("token");
@@ -46,9 +50,9 @@ export const HomePage: React.FC = () => {
 	const loadAllLanguages = async () => {
 		try {
 			if (token) {
-				const fetchedLanguages = await fetchLanguages(token); // GET request for initial data
+				const fetchedLanguages = await fetchLanguages(token); 
 				setLanguages(fetchedLanguages);
-				setError(null); // Resetăm eroarea dacă încărcarea este reușită
+				setError(null);
 			}
 			setLoading(false);
 		} catch (err) {
@@ -57,17 +61,14 @@ export const HomePage: React.FC = () => {
 		}
 	};
 
-	// Încărcăm limbajele la inițializare (folosind GET)
 	useEffect(() => {
 		loadAllLanguages();
 	}, [token]);
 
-	// Facem POST doar la search sau sortare
 	useEffect(() => {
 		const searchForLanguages = async () => {
 			try {
 				if (token && (searchTerm || sortBy)) {
-					// Declanșăm POST doar dacă există searchTerm sau sortare activă
 					const fetchedLanguages = await searchLanguages(
 						token,
 						searchTerm,
@@ -88,29 +89,27 @@ export const HomePage: React.FC = () => {
 		};
 
 		if (triggerSearch) {
-			searchForLanguages(); // POST se declanșează doar dacă triggerSearch este true
+			searchForLanguages(); 
 		}
 	}, [token, searchTerm, sortBy, sortOrder, triggerSearch]);
 
 	const handleSort = (column: string) => {
 		if (sortBy === column) {
-			// Dacă facem click pe aceeași coloană, inversăm ordinea
 			setSortOrder(sortOrder === "asc" ? "desc" : "asc");
 		} else {
-			// Altfel, sortăm crescător pe noua coloană
 			setSortBy(column);
 			setSortOrder("asc");
 		}
-		setTriggerSearch(true); // Permitem declanșarea POST pentru sortare
+		setTriggerSearch(true); 
 	};
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchTerm(e.target.value);
-		setTriggerSearch(true); // Permitem declanșarea POST pentru search
+		setTriggerSearch(true); 
 	};
 
 	const handleAddNewLanguage = () => {
-		navigate("/add-new-language"); // Navighează către pagina de adăugare a limbajului
+		navigate("/add-new-language"); 
 	};
 
 	const handleEdit = (id: number) => {
@@ -118,7 +117,7 @@ export const HomePage: React.FC = () => {
 	};
 
 	const handleDeleteConfirmation = (language: ProgrammingLanguage) => {
-		setLanguageToDelete(language); // Show the confirmation modal
+		setLanguageToDelete(language); 
 	};
 
 	const handleDelete = async () => {
@@ -128,12 +127,45 @@ export const HomePage: React.FC = () => {
 				setLanguages(
 					languages.filter((lang) => lang.id !== languageToDelete.id),
 				);
-				setLanguageToDelete(null); // Close the modal after deleting
+				setLanguageToDelete(null); 
 			} catch (err) {
 				console.error("Failed to delete language", err);
 			}
 		}
 	};
+
+	const handleBulkDelete = async () => {
+		if (selectedLanguages.length > 0 && token) {
+		  try {
+			await deleteAllLanguages(selectedLanguages, token);
+			setLanguages(
+			  languages.filter((lang) => !selectedLanguages.includes(lang.id)),
+			);
+			setSelectedLanguages([]);
+			setSelectAll(false);
+			setBulkDeleteConfirmation(false); // Close the bulk delete dialog
+		  } catch (err) {
+			console.error("Failed to delete selected languages", err);
+		  }
+		}
+	  };
+	
+	  const handleSelectLanguage = (id: number) => {
+		if (selectedLanguages.includes(id)) {
+		  setSelectedLanguages(selectedLanguages.filter((langId) => langId !== id));
+		} else {
+		  setSelectedLanguages([...selectedLanguages, id]);
+		}
+	  };
+	
+	  const handleSelectAll = () => {
+		if (selectAll) {
+		  setSelectedLanguages([]);
+		} else {
+		  setSelectedLanguages(languages.map((lang) => lang.id));
+		}
+		setSelectAll(!selectAll);
+	  };
 
 	if (loading) {
 		return <p>Loading programming languages...</p>;
@@ -151,11 +183,11 @@ export const HomePage: React.FC = () => {
 						type="text"
 						placeholder="Search for a programming language..."
 						value={searchTerm}
-						onChange={handleSearchChange} // Păstrăm termenul în câmpul de căutare
+						onChange={handleSearchChange} 
 						className="w-full p-2 border rounded"
 					/>
 				</div>
-				<p>{error}</p> {/* Afișăm mesajul de eroare */}
+				<p>{error}</p> 
 			</div>
 		);
 	}
@@ -175,6 +207,11 @@ export const HomePage: React.FC = () => {
 					onChange={handleSearchChange}
 					className="w-full p-2 border rounded"
 				/>
+				{selectedLanguages.length > 0 && (
+					<Button onClick={() => setBulkDeleteConfirmation(true)} className="ml-4" variant="destructive">
+						Delete Selected
+					</Button>
+        )}
 				<Button onClick={handleAddNewLanguage} className="ml-4">
 					Add New Language
 				</Button>
@@ -185,6 +222,9 @@ export const HomePage: React.FC = () => {
 					<TableCaption>A list of programming languages.</TableCaption>
 					<TableHeader>
 						<TableRow>
+							<TableHead className="w-[50px]">
+								<Checkbox checked={selectAll} onCheckedChange={handleSelectAll} />
+							</TableHead>
 							<TableHead className="w-[50px]" onClick={() => handleSort("id")}>
 								ID {sortBy === "id" && (sortOrder === "asc" ? "↑" : "↓")}
 							</TableHead>
@@ -222,6 +262,12 @@ export const HomePage: React.FC = () => {
 								}
 								className="cursor-pointer hover:bg-slate-200"
 							>
+								<TableCell onClick={(e) => e.stopPropagation()}>
+									<Checkbox
+									checked={selectedLanguages.includes(language.id)}
+									onCheckedChange={() => handleSelectLanguage(language.id)}
+									/>
+              					</TableCell>
 								<TableCell className="font-medium">{language.id}</TableCell>
 								<TableCell>{language.name}</TableCell>
 								<TableCell>{language.creator}</TableCell>
@@ -233,7 +279,7 @@ export const HomePage: React.FC = () => {
 								<TableCell onClick={(e) => e.stopPropagation()}>
 									<Button
 										onClick={() => handleEdit(language.id)}
-										variant="outline" // Folosim un stil din shadcn-ui
+										variant="outline"
 										className="text-blue-600"
 									>
 										Edit
@@ -273,6 +319,32 @@ export const HomePage: React.FC = () => {
 							Cancel
 						</Button>
 						<Button variant="destructive" onClick={handleDelete}>
+							Confirm
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+
+			{/* Bulk Delete Confirmation Dialog */}
+			<Dialog
+				open={bulkDeleteConfirmation}
+				onOpenChange={() => setBulkDeleteConfirmation(false)}
+			>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Delete Selected Languages?</DialogTitle>
+						<DialogDescription>
+							Are you sure you want to delete the selected languages? This action cannot be undone.
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter>
+						<Button
+							variant="secondary"
+							onClick={() => setBulkDeleteConfirmation(false)}
+						>
+							Cancel
+						</Button>
+						<Button variant="destructive" onClick={handleBulkDelete}>
 							Confirm
 						</Button>
 					</DialogFooter>
