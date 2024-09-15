@@ -127,15 +127,15 @@ export const updateLanguage = async (
   }
 };
 
-  export const deleteCarById = async (id: number, token: string) => {
+  export const deleteLanguage = async (id: number, token: string) => {
     try {
-        await axios.delete(`${BASE_URL}/cars/${id}`, {
+        await axios.delete(`${BASE_URL}/programming-languages/${id}`, {
             headers: {
-                Authorization: token,
+              Authorization: `Bearer ${token}`,
             },
         });
     } catch (error) {
-        throw new Error ('Failed to delete car');
+        throw new Error ('Failed to delete programming language');
     }
   };
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logout from "./Logout";
 import { Button } from "./ui/button";
-import { fetchLanguages, searchLanguages } from "./api/languages-api";
+import { deleteLanguage, fetchLanguages, searchLanguages } from "./api/languages-api";
 import {
 	Table,
 	TableBody,
@@ -13,6 +13,7 @@ import {
 	TableRow,
 } from "./ui/table";
 import { Input } from "./ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
 
 interface ProgrammingLanguage {
 	id: number;
@@ -32,7 +33,8 @@ export const HomePage: React.FC = () => {
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [sortBy, setSortBy] = useState<string>(""); // Coloana de sortare
 	const [sortOrder, setSortOrder] = useState<string>("asc"); // Ordinea de sortare: asc / desc
-	const [triggerSearch, setTriggerSearch] = useState<boolean>(false); // Control pentru declanșarea POST
+	const [triggerSearch, setTriggerSearch] = useState<boolean>(false); 
+	const [languageToDelete, setLanguageToDelete] = useState<ProgrammingLanguage | null>(null); // State for selected language to delete
 
 	useEffect(() => {
 		const savedToken = localStorage.getItem("token");
@@ -113,6 +115,24 @@ export const HomePage: React.FC = () => {
 
 	const handleEdit = (id: number) => {
 		navigate(`/programming-languages/edit/${id}`);
+	};
+
+	const handleDeleteConfirmation = (language: ProgrammingLanguage) => {
+		setLanguageToDelete(language); // Show the confirmation modal
+	};
+
+	const handleDelete = async () => {
+		if (languageToDelete && token) {
+			try {
+				await deleteLanguage(languageToDelete.id, token);
+				setLanguages(
+					languages.filter((lang) => lang.id !== languageToDelete.id),
+				);
+				setLanguageToDelete(null); // Close the modal after deleting
+			} catch (err) {
+				console.error("Failed to delete language", err);
+			}
+		}
 	};
 
 	if (loading) {
@@ -218,14 +238,46 @@ export const HomePage: React.FC = () => {
 									>
 										Edit
 									</Button>
+									<Button
+										onClick={() => handleDeleteConfirmation(language)}
+										variant="destructive"
+									>
+										Delete
+									</Button>
 								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
 				</Table>
 			) : (
-				<p>No results found for "{searchTerm}"</p> // Afișăm mesajul de eroare în locul tabelului
+				<p>No results found for "{searchTerm}"</p>
 			)}
+
+			<Dialog
+				open={!!languageToDelete}
+				onOpenChange={() => setLanguageToDelete(null)}
+			>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Delete {languageToDelete?.name}?</DialogTitle>
+						<DialogDescription>
+							Are you sure you want to delete this language? This action cannot
+							be undone.
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter>
+						<Button
+							variant="secondary"
+							onClick={() => setLanguageToDelete(null)}
+						>
+							Cancel
+						</Button>
+						<Button variant="destructive" onClick={handleDelete}>
+							Confirm
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 
 			<Button onClick={() => window.location.reload()} className="mt-6">
 				Reload Languages
