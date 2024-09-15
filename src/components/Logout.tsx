@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "./api/languages-api";
+import { Button } from "./ui/button";
 
 interface LogoutProps {
 	token: string;
@@ -24,12 +25,11 @@ const Logout: React.FC<LogoutProps> = ({ token, clearToken }) => {
 	};
 
 	return (
-		<button
-			className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+		<Button
 			onClick={handleLogout}
 		>
 			Logout
-		</button>
+		</Button>
 	);
 };
 

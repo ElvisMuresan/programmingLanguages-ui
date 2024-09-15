@@ -15,6 +15,7 @@ import {
 import { Input } from "./ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Checkbox } from "./ui/checkbox";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 interface ProgrammingLanguage {
 	id: number;
@@ -27,6 +28,7 @@ interface ProgrammingLanguage {
 
 export const HomePage: React.FC = () => {
 	const [token, setToken] = useState<string | null>(null);
+	const [username, setUsername] = useState<string | null>(null);
 	const navigate = useNavigate();
 	const [languages, setLanguages] = useState<ProgrammingLanguage[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -38,12 +40,15 @@ export const HomePage: React.FC = () => {
 	const [languageToDelete, setLanguageToDelete] = useState<ProgrammingLanguage | null>(null); 
 	const [selectedLanguages, setSelectedLanguages] = useState<number[]>([]); 
 	const [selectAll, setSelectAll] = useState<boolean>(false); 
-	const [bulkDeleteConfirmation, setBulkDeleteConfirmation] = useState<boolean>(false); // For bulk delete
+	const [bulkDeleteConfirmation, setBulkDeleteConfirmation] = useState<boolean>(false); 
 
 	useEffect(() => {
 		const savedToken = localStorage.getItem("token");
-		if (savedToken) {
+		const savedUsername = localStorage.getItem("username");
+
+		if (savedToken && savedUsername) {
 			setToken(savedToken);
+			setUsername(savedUsername);
 		}
 	}, []);
 
@@ -167,37 +172,41 @@ export const HomePage: React.FC = () => {
 		setSelectAll(!selectAll);
 	  };
 
+	  const user = {
+		username,
+		fullName: username === 'elvis' ? 'Elvis Muresan' : 'Florin Bejera',
+		email: username === 'elvis' ? 'elvis.e.muresan@gmail.com' : 'florinpentru0306@gmail.com',
+	  };
+
 	if (loading) {
 		return <p>Loading programming languages...</p>;
 	}
 
-	if (error && languages.length === 0) {
-		return (
-			<div className="container mx-auto p-4">
-				<h1 className="text-2xl">Programming Languages List</h1>
-				{token ? (
-					<Logout token={token} clearToken={() => setToken(null)} />
-				) : null}
-				<div className="my-4">
-					<Input
-						type="text"
-						placeholder="Search for a programming language..."
-						value={searchTerm}
-						onChange={handleSearchChange} 
-						className="w-full p-2 border rounded"
-					/>
-				</div>
-				<p>{error}</p> 
-			</div>
-		);
-	}
-
 	return (
 		<div className="container mx-auto p-4">
-			<h1 className="text-2xl">Programming Languages List</h1>
 			{token ? (
-				<Logout token={token} clearToken={() => setToken(null)} />
-			) : null}
+				<div className="absolute top-4 right-[250px]">
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="outline" className="ml-4">
+								Account
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuItem className="pointer-events-none">
+								<span className="font-bold">{user.fullName}</span>
+							</DropdownMenuItem>
+							<DropdownMenuItem className="pointer-events-none">
+								<span>{user.email}</span>
+							</DropdownMenuItem>
+							<DropdownMenuItem>
+								<Logout token={token} clearToken={() => setToken(null)} />
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>			
+				</div>
+) : null}
+				
 
 			<div className="flex justify-between items-center mb-4">
 				<Input
