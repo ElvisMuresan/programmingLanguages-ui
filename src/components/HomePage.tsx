@@ -214,7 +214,7 @@ export const HomePage: React.FC = () => {
 					placeholder="Search for a programming language..."
 					value={searchTerm}
 					onChange={handleSearchChange}
-					className="w-full p-2 border rounded"
+					className="w-1/4 p-2 border rounded"
 				/>
 				{selectedLanguages.length > 0 && (
 					<Button onClick={() => setBulkDeleteConfirmation(true)} className="ml-4" variant="destructive">
@@ -286,7 +286,7 @@ export const HomePage: React.FC = () => {
 									{language.popularity}
 								</TableCell>
 								<TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-									<Button
+									<Button className="mr-2"
 										onClick={() => handleEdit(language.id)}
 									>
 										Edit
