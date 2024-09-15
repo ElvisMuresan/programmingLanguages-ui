@@ -11,6 +11,7 @@ import { ModeToggle } from "./components/mode-toggle";
 import { HomePage } from "./components/HomePage";
 import ProgrammingLanguageDetails from "./components/ProgLanguageDetails";
 import { AddNewLanguagePage } from "./components/AddLanguage";
+import { EditLanguagePage } from "./components/EditLanguage";
 
 function App() {
 	return (
@@ -48,6 +49,14 @@ function App() {
 								element={
 									<PrivateRoute>
 										<AddNewLanguagePage />
+									</PrivateRoute>
+								}
+							/>
+							<Route
+								path="/programming-languages/edit/:id"
+								element={
+									<PrivateRoute>
+										<EditLanguagePage />
 									</PrivateRoute>
 								}
 							/>

@@ -2,6 +2,15 @@ import axios from 'axios';
 
 const BASE_URL = 'http://164.90.166.249:3001'
 
+interface IProgrammingLanguage {
+  id: number;
+  name: string;
+  creator: string;
+  releaseYear: number;
+  paradigm: string;
+  popularity: number;
+}
+
 export const loginUser = async (username: string, password: string) => {
     try {
       const response = await axios.post(`${BASE_URL}/login`, {
@@ -97,22 +106,26 @@ export const logoutUser = async (token: string) => {
     }
 };
 
-
-  export const updateCarById = async (
-    id: number,
-    car: { brand: string; model: string; color: string; engine: string; horsePower: number },
-    token: string
-  ) => {
-    try {
-      await axios.put(`${BASE_URL}/cars/${id}`, car, {
+export const updateLanguage = async (
+  id: number,
+  updatedLanguage: Partial<IProgrammingLanguage>,
+  token: string
+) => {
+  try {
+    const response = await axios.put(
+      `${BASE_URL}/programming-languages/${id}`,
+      updatedLanguage,
+      {
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
-      });
-    } catch (error) {
-      throw new Error('Failed to update car');
-    }
-  };
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error('Failed to update programming language');
+  }
+};
 
   export const deleteCarById = async (id: number, token: string) => {
     try {

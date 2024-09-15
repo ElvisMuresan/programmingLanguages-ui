@@ -111,6 +111,10 @@ export const HomePage: React.FC = () => {
 		navigate("/add-new-language"); // Navighează către pagina de adăugare a limbajului
 	};
 
+	const handleEdit = (id: number) => {
+		navigate(`/programming-languages/edit/${id}`);
+	};
+
 	if (loading) {
 		return <p>Loading programming languages...</p>;
 	}
@@ -186,6 +190,7 @@ export const HomePage: React.FC = () => {
 								Popularity (%){" "}
 								{sortBy === "popularity" && (sortOrder === "asc" ? "↑" : "↓")}
 							</TableHead>
+							<TableHead>Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -204,6 +209,15 @@ export const HomePage: React.FC = () => {
 								<TableCell>{language.paradigm}</TableCell>
 								<TableCell className="text-right">
 									{language.popularity}
+								</TableCell>
+								<TableCell onClick={(e) => e.stopPropagation()}>
+									<Button
+										onClick={() => handleEdit(language.id)}
+										variant="outline" // Folosim un stil din shadcn-ui
+										className="text-blue-600"
+									>
+										Edit
+									</Button>
 								</TableCell>
 							</TableRow>
 						))}
