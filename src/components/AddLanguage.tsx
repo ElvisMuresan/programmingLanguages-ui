@@ -13,6 +13,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/hooks/use-toast";
 
 const schema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters."),
@@ -51,7 +52,11 @@ export const AddNewLanguagePage: React.FC = () => {
 				popularity: Number(data.popularity),
 			};
 			await addNewLanguage(newLanguage);
-			navigate("/programming-languages");
+			toast({
+				title: "Success",
+				description: "New programming language added successfully!",
+			});
+			navigate("/programming-languages", { state: { showToast: true } });
 		} catch (err) {
 			console.error("Failed to add new language", err);
 		}
