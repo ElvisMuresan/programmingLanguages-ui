@@ -16,6 +16,7 @@ import { Input } from "./ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Checkbox } from "./ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { ArrowUpDown } from "lucide-react";
 
 interface ProgrammingLanguage {
 	id: number;
@@ -81,7 +82,7 @@ export const HomePage: React.FC = () => {
 						sortOrder,
 					);
 					if (fetchedLanguages.length === 0) {
-						setError(`No results found for "${searchTerm}"`);
+						setError(`No programming languages available"`);
 						setLanguages([]);
 					} else {
 						setLanguages(fetchedLanguages);
@@ -148,7 +149,7 @@ export const HomePage: React.FC = () => {
 			);
 			setSelectedLanguages([]);
 			setSelectAll(false);
-			setBulkDeleteConfirmation(false); // Close the bulk delete dialog
+			setBulkDeleteConfirmation(false); 
 		  } catch (err) {
 			console.error("Failed to delete selected languages", err);
 		  }
@@ -228,80 +229,101 @@ export const HomePage: React.FC = () => {
 
 			{languages.length > 0 ? (
 				<Table>
-					<TableCaption>A list of programming languages.</TableCaption>
-					<TableHeader>
-						<TableRow>
-							<TableHead className="w-[50px]">
-								<Checkbox checked={selectAll} onCheckedChange={handleSelectAll} />
-							</TableHead>
-							<TableHead className="w-[50px]" onClick={() => handleSort("id")}>
-								ID {sortBy === "id" && (sortOrder === "asc" ? "↑" : "↓")}
-							</TableHead>
-							<TableHead onClick={() => handleSort("name")}>
-								Name {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
-							</TableHead>
-							<TableHead onClick={() => handleSort("creator")}>
-								Creator{" "}
-								{sortBy === "creator" && (sortOrder === "asc" ? "↑" : "↓")}
-							</TableHead>
-							<TableHead onClick={() => handleSort("releaseYear")}>
-								Release Year{" "}
-								{sortBy === "releaseYear" && (sortOrder === "asc" ? "↑" : "↓")}
-							</TableHead>
-							<TableHead onClick={() => handleSort("paradigm")}>
-								Paradigm{" "}
-								{sortBy === "paradigm" && (sortOrder === "asc" ? "↑" : "↓")}
-							</TableHead>
-							<TableHead
-								
-								onClick={() => handleSort("popularity")}
-							>
-								Popularity (%){" "}
-								{sortBy === "popularity" && (sortOrder === "asc" ? "↑" : "↓")}
-							</TableHead>
-							<TableHead className="text-right">Actions</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{languages.map((language) => (
-							<TableRow
-								key={language.id}
-								onClick={() =>
-									navigate(`/programming-languages/${language.id}`)
-								}
-								className="cursor-pointer hover:bg-slate-200"
-							>
-								<TableCell onClick={(e) => e.stopPropagation()}>
-									<Checkbox
-									checked={selectedLanguages.includes(language.id)}
-									onCheckedChange={() => handleSelectLanguage(language.id)}
-									/>
-              					</TableCell>
-								<TableCell className="font-medium">{language.id}</TableCell>
-								<TableCell>{language.name}</TableCell>
-								<TableCell>{language.creator}</TableCell>
-								<TableCell>{language.releaseYear}</TableCell>
-								<TableCell>{language.paradigm}</TableCell>
-								<TableCell >
-									{language.popularity}
-								</TableCell>
-								<TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
-									<Button className="mr-2"
-										onClick={() => handleEdit(language.id)}
-									>
-										Edit
-									</Button>
-									<Button
-										onClick={() => handleDeleteConfirmation(language)}
-										variant="destructive"
-									>
-										Delete
-									</Button>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
+				<TableCaption>A list of programming languages.</TableCaption>
+				<TableHeader>
+				  <TableRow>
+					<TableHead className="text-center">
+					  <Checkbox checked={selectAll} onCheckedChange={handleSelectAll} />
+					</TableHead>
+					<TableHead className="text-center">
+					  <Button
+						variant="ghost"
+						onClick={() => handleSort("id")}
+					  >
+						ID
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					  </Button>
+					</TableHead>
+					<TableHead className="text-center">
+					  <Button
+						variant="ghost"
+						onClick={() => handleSort("name")}
+					  >
+						Name
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					  </Button>
+					</TableHead>
+					<TableHead className="text-center">
+					  <Button
+						variant="ghost"
+						onClick={() => handleSort("creator")}
+					  >
+						Creator
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					  </Button>
+					</TableHead>
+					<TableHead className="text-center">
+					  <Button
+						variant="ghost"
+						onClick={() => handleSort("releaseYear")}
+					  >
+						Release Year
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					  </Button>
+					</TableHead>
+					<TableHead className="text-center">
+					  <Button
+						variant="ghost"
+						onClick={() => handleSort("paradigm")}
+					  >
+						Paradigm
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					  </Button>
+					</TableHead>
+					<TableHead className="text-center">
+					  <Button
+						variant="ghost"
+						onClick={() => handleSort("popularity")}
+					  >
+						Popularity
+						<ArrowUpDown className="ml-2 h-4 w-4" />
+					  </Button>
+					</TableHead>
+					<TableHead className="text-right">Actions</TableHead>
+				  </TableRow>
+				</TableHeader>
+				<TableBody>
+				  {languages.map((language) => (
+					<TableRow
+					  key={language.id}
+					  onClick={() => navigate(`/programming-languages/${language.id}`)}
+					  className="cursor-pointer hover:bg-slate-200"
+					>
+					  <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
+						<Checkbox
+						  checked={selectedLanguages.includes(language.id)}
+						  onCheckedChange={() => handleSelectLanguage(language.id)}
+						/>
+					  </TableCell>
+					  <TableCell className="text-center">{language.id}</TableCell>
+					  <TableCell className="text-center">{language.name}</TableCell>
+					  <TableCell className="text-center">{language.creator}</TableCell>
+					  <TableCell className="text-center">{language.releaseYear}</TableCell>
+					  <TableCell className="text-center">{language.paradigm}</TableCell>
+					  <TableCell className="text-center">{language.popularity}</TableCell>
+					  <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+						<Button className="mr-2" onClick={() => handleEdit(language.id)}>
+						  Edit
+						</Button>
+						<Button onClick={() => handleDeleteConfirmation(language)} variant="destructive">
+						  Delete
+						</Button>
+					  </TableCell>
+					</TableRow>
+				  ))}
+				</TableBody>
+			  	</Table>
+			  
 			) : (
 				<p>No results found for "{searchTerm}"</p>
 			)}
