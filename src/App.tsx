@@ -19,7 +19,7 @@ function App() {
 			<Router>
 				<div className="min-h-screen flex flex-col ">
 					<header className="p-4">
-						<div className="container mx-auto flex justify-end">
+						<div className="container mx-auto flex justify-start">
 							<ModeToggle />
 						</div>
 					</header>

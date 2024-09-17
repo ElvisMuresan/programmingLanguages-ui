@@ -185,14 +185,14 @@ export const HomePage: React.FC = () => {
 	return (
 		<div className="container mx-auto p-4">
 			{token ? (
-				<div className="absolute top-4">
+				<div className="fixed top-4 right-28">
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-						<Button className="ml-4">
+						<Button >
 							Account
 						</Button>
 						</DropdownMenuTrigger>
-						<DropdownMenuContent align="start"> 
+						<DropdownMenuContent align="end"> 
 						<DropdownMenuItem className="pointer-events-none">
 							<span className="font-bold">{user.fullName}</span>
 						</DropdownMenuItem>
