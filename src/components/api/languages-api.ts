@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from "axios";
 
 const BASE_URL = 'http://164.90.166.249:3001'
 
@@ -60,7 +60,7 @@ export const logoutUser = async (token: string) => {
       });
       return response.data;
     } catch (error) {
-      throw new Error('Failed to fetch car programming-languages');
+      throw new Error('Failed to fetch programming-languages by id');
     }
   };
 
@@ -81,8 +81,10 @@ export const logoutUser = async (token: string) => {
       );
       return response.data;
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        return [];
+      if (error instanceof AxiosError) {
+        if (error.response && error.response.status === 404) {
+          return [];
+       }
       }
       throw new Error('Failed to search programming languages');
     }
