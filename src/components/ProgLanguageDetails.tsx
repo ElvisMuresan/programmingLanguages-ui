@@ -13,11 +13,11 @@ interface ProgrammingLanguage {
 }
 
 const ProgrammingLanguageDetails: React.FC = () => {
-	const { id } = useParams<{ id: string }>(); // Obținem id-ul din URL
+	const { id } = useParams<{ id: string }>(); 
 	const [language, setLanguage] = useState<ProgrammingLanguage | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
-	const token = localStorage.getItem("token"); // Tokenul utilizatorului
+	const token = localStorage.getItem("token"); 
 
 	useEffect(() => {
 		const loadLanguage = async () => {

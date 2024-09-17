@@ -66,7 +66,7 @@ export function Login() {
 	};
 
 	return (
-		<div className="flex justify-center items-center h-screen">
+		<div className="flex justify-center items-center min-h-screen">
 			<Card className="w-full max-w-md">
 				<CardHeader>
 					<CardTitle className="text-center">Login</CardTitle>
