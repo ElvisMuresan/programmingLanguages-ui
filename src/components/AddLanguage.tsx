@@ -17,19 +17,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const schema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters."),
 	creator: z.string().min(2, "Creator must be at least 2 characters."),
-	releaseYear: z.coerce.number().min(1900, "Release year must be valid.").max(new Date().getFullYear(), "Release year cannot be in the future."),
+	releaseYear: z.coerce
+		.number()
+		.min(1900, "Release year must be valid.")
+		.max(new Date().getFullYear(), "Release year cannot be in the future."),
 	paradigm: z.string().min(2, "Paradigm must be at least 2 characters."),
-	popularity: z.coerce.number().min(0).max(100, "Popularity must be between 0 and 100."),
+	popularity: z.coerce
+		.number()
+		.min(0)
+		.max(100, "Popularity must be between 0 and 100."),
 });
 
-  type FormValues = z.infer<typeof schema>;
+type FormValues = z.infer<typeof schema>;
 
 export const AddNewLanguagePage: React.FC = () => {
 	const navigate = useNavigate();
 
 	const methods = useForm<FormValues>({
 		resolver: zodResolver(schema),
-	  }); 
+	});
 	const {
 		handleSubmit,
 		formState: { errors },
@@ -44,8 +50,8 @@ export const AddNewLanguagePage: React.FC = () => {
 				paradigm: data.paradigm,
 				popularity: Number(data.popularity),
 			};
-			await addNewLanguage(newLanguage); 
-			navigate("/programming-languages"); 
+			await addNewLanguage(newLanguage);
+			navigate("/programming-languages");
 		} catch (err) {
 			console.error("Failed to add new language", err);
 		}
@@ -55,87 +61,100 @@ export const AddNewLanguagePage: React.FC = () => {
 		<div className="flex justify-center items-center">
 			<Card className="w-full max-w-md">
 				<CardHeader className="flex items-start">
-					<Button onClick={() => navigate("/programming-languages")} className="mb-4">
+					<Button
+						onClick={() => navigate("/programming-languages")}
+						className="mb-4"
+					>
 						Back
 					</Button>
-					<CardTitle className="text-center w-full">Add New Programming Language</CardTitle>
+					<CardTitle className="text-center w-full">
+						Add New Programming Language
+					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<FormProvider {...methods}>
 						<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-						<FormField
-							name="name"
-							render={({ field }) => (
-							<FormItem>
-								<FormLabel>Language Name</FormLabel>
-								<FormControl>
-								<Input placeholder="Language Name" {...field} />
-								</FormControl>
-								<FormMessage>{errors.name?.message}</FormMessage>
-							</FormItem>
-							)}
-						/>
+							<FormField
+								name="name"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Language Name</FormLabel>
+										<FormControl>
+											<Input placeholder="Language Name" {...field} />
+										</FormControl>
+										<FormMessage>{errors.name?.message}</FormMessage>
+									</FormItem>
+								)}
+							/>
 
-						<FormField
-							name="creator"
-							render={({ field }) => (
-							<FormItem>
-								<FormLabel>Creator</FormLabel>
-								<FormControl>
-								<Input placeholder="Creator" {...field} />
-								</FormControl>
-								<FormMessage>{errors.creator?.message}</FormMessage>
-							</FormItem>
-							)}
-						/>
+							<FormField
+								name="creator"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Creator</FormLabel>
+										<FormControl>
+											<Input placeholder="Creator" {...field} />
+										</FormControl>
+										<FormMessage>{errors.creator?.message}</FormMessage>
+									</FormItem>
+								)}
+							/>
 
-						<FormField
-							name="releaseYear"
-							render={({ field }) => (
-							<FormItem>
-								<FormLabel>Release Year</FormLabel>
-								<FormControl>
-								<Input type="number" placeholder="Release Year" {...field} />
-								</FormControl>
-								<FormMessage>{errors.releaseYear?.message}</FormMessage>
-							</FormItem>
-							)}
-						/>
+							<FormField
+								name="releaseYear"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Release Year</FormLabel>
+										<FormControl>
+											<Input
+												type="number"
+												placeholder="Release Year"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage>{errors.releaseYear?.message}</FormMessage>
+									</FormItem>
+								)}
+							/>
 
-						<FormField
-							name="paradigm"
-							render={({ field }) => (
-							<FormItem>
-								<FormLabel>Paradigm</FormLabel>
-								<FormControl>
-								<Input placeholder="Paradigm" {...field} />
-								</FormControl>
-								<FormMessage>{errors.paradigm?.message}</FormMessage>
-							</FormItem>
-							)}
-						/>
+							<FormField
+								name="paradigm"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Paradigm</FormLabel>
+										<FormControl>
+											<Input placeholder="Paradigm" {...field} />
+										</FormControl>
+										<FormMessage>{errors.paradigm?.message}</FormMessage>
+									</FormItem>
+								)}
+							/>
 
-						<FormField
-							name="popularity"
-							render={({ field }) => (
-							<FormItem>
-								<FormLabel>Popularity (%)</FormLabel>
-								<FormControl>
-								<Input type="number" step="0.01" placeholder="Popularity (%)" {...field} />
-								</FormControl>
-								<FormMessage>{errors.popularity?.message}</FormMessage>
-							</FormItem>
-							)}
-						/>
+							<FormField
+								name="popularity"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Popularity (%)</FormLabel>
+										<FormControl>
+											<Input
+												type="number"
+												step="0.01"
+												placeholder="Popularity (%)"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage>{errors.popularity?.message}</FormMessage>
+									</FormItem>
+								)}
+							/>
 
-						<Button type="submit" className="w-full">
-							Add Language
-						</Button>
+							<Button type="submit" className="w-full">
+								Add Language
+							</Button>
 						</form>
 					</FormProvider>
 				</CardContent>
 			</Card>
 		</div>
-
 	);
 };

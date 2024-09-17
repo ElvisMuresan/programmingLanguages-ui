@@ -48,7 +48,7 @@ export function Login() {
 		try {
 			const response = await loginUser(values.username, values.password);
 
-			if (response && response.token) {
+			if (response?.token) {
 				localStorage.setItem("token", response.token);
 				localStorage.setItem("username", response.username);
 

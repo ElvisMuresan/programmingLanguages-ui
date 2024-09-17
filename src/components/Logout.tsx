@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "./api/languages-api";
 import { Button } from "./ui/button";
@@ -24,13 +24,7 @@ const Logout: React.FC<LogoutProps> = ({ token, clearToken }) => {
 		}
 	};
 
-	return (
-		<Button
-			onClick={handleLogout}
-		>
-			Logout
-		</Button>
-	);
+	return <Button onClick={handleLogout}>Logout</Button>;
 };
 
 export default Logout;

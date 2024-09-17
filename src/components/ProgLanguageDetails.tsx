@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchLanguageById } from "./api/languages-api";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -13,11 +14,11 @@ interface ProgrammingLanguage {
 }
 
 const ProgrammingLanguageDetails: React.FC = () => {
-	const { id } = useParams<{ id: string }>(); 
+	const { id } = useParams<{ id: string }>();
 	const [language, setLanguage] = useState<ProgrammingLanguage | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
-	const token = localStorage.getItem("token"); 
+	const token = localStorage.getItem("token");
 
 	useEffect(() => {
 		const loadLanguage = async () => {
@@ -52,29 +53,29 @@ const ProgrammingLanguageDetails: React.FC = () => {
 		<div className="flex justify-center items-center h-screen">
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-center">Programming Language Details</CardTitle>
+					<CardTitle className="text-center">
+						Programming Language Details
+					</CardTitle>
 				</CardHeader>
 				<CardContent className="space-y-4 text-center">
 					<p>
-					<strong>Name:</strong> {language.name}
+						<strong>Name:</strong> {language.name}
 					</p>
 					<p>
-					<strong>Creator:</strong> {language.creator}
+						<strong>Creator:</strong> {language.creator}
 					</p>
 					<p>
-					<strong>Release Year:</strong> {language.releaseYear}
+						<strong>Release Year:</strong> {language.releaseYear}
 					</p>
 					<p>
-					<strong>Paradigm:</strong> {language.paradigm}
+						<strong>Paradigm:</strong> {language.paradigm}
 					</p>
 					<p>
-					<strong>Popularity:</strong> {language.popularity}%
+						<strong>Popularity:</strong> {language.popularity}%
 					</p>
 				</CardContent>
 			</Card>
 		</div>
-
-
 	);
 };
 

@@ -18,17 +18,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const schema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters."),
 	creator: z.string().min(2, "Creator must be at least 2 characters."),
-	releaseYear: z.coerce.number().min(1900, "Release year must be valid.").max(new Date().getFullYear(), "Release year cannot be in the future."),
+	releaseYear: z.coerce
+		.number()
+		.min(1900, "Release year must be valid.")
+		.max(new Date().getFullYear(), "Release year cannot be in the future."),
 	paradigm: z.string().min(2, "Paradigm must be at least 2 characters."),
-	popularity: z.coerce.number().min(0).max(100, "Popularity must be between 0 and 100."),
+	popularity: z.coerce
+		.number()
+		.min(0)
+		.max(100, "Popularity must be between 0 and 100."),
 });
 
 type FormValues = z.infer<typeof schema>;
 
 export const EditLanguagePage: React.FC = () => {
-	const { id } = useParams(); 
+	const { id } = useParams();
 	const navigate = useNavigate();
-	const token = localStorage.getItem("token"); 
+	const token = localStorage.getItem("token");
 
 	const [language, setLanguage] = useState<FormValues>({
 		name: "",
@@ -41,7 +47,10 @@ export const EditLanguagePage: React.FC = () => {
 	useEffect(() => {
 		const getLanguageDetails = async () => {
 			try {
-				const fetchedLanguage = await fetchLanguageById(Number(id), token || "");
+				const fetchedLanguage = await fetchLanguageById(
+					Number(id),
+					token || "",
+				);
 				setLanguage(fetchedLanguage);
 			} catch (err) {
 				console.error("Failed to fetch language details", err);
@@ -52,7 +61,7 @@ export const EditLanguagePage: React.FC = () => {
 
 	const methods = useForm<FormValues>({
 		resolver: zodResolver(schema),
-		defaultValues: language, 
+		defaultValues: language,
 	});
 
 	const {
@@ -90,10 +99,15 @@ export const EditLanguagePage: React.FC = () => {
 		<div className="flex justify-center items-center">
 			<Card className="w-full max-w-md">
 				<CardHeader className="flex items-start">
-					<Button onClick={() => navigate("/programming-languages")} className="mb-4">
+					<Button
+						onClick={() => navigate("/programming-languages")}
+						className="mb-4"
+					>
 						Back
 					</Button>
-					<CardTitle className="text-center w-full">Edit Programming Language</CardTitle>
+					<CardTitle className="text-center w-full">
+						Edit Programming Language
+					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<FormProvider {...methods}>
@@ -130,7 +144,11 @@ export const EditLanguagePage: React.FC = () => {
 									<FormItem>
 										<FormLabel>Release Year</FormLabel>
 										<FormControl>
-											<Input type="number" placeholder="Release Year" {...field} />
+											<Input
+												type="number"
+												placeholder="Release Year"
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage>{errors.releaseYear?.message}</FormMessage>
 									</FormItem>
@@ -156,7 +174,12 @@ export const EditLanguagePage: React.FC = () => {
 									<FormItem>
 										<FormLabel>Popularity (%)</FormLabel>
 										<FormControl>
-											<Input type="number" step="0.01" placeholder="Popularity (%)" {...field} />
+											<Input
+												type="number"
+												step="0.01"
+												placeholder="Popularity (%)"
+												{...field}
+											/>
 										</FormControl>
 										<FormMessage>{errors.popularity?.message}</FormMessage>
 									</FormItem>
